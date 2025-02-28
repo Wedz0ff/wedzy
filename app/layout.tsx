@@ -7,13 +7,25 @@ import type { Navigation } from '@toolpad/core/AppProvider';
 import theme from '../theme';
 import Image from 'next/image';
 
+export const metadata = {
+  title: {
+    default: 'Wedzy',
+    template: '%s | Wedzy',
+  },
+};
+
 const NAVIGATION: Navigation = [
   {
     kind: 'header',
-    title: 'Main items',
+    title: '',
   },
   {
     title: 'Home',
+    icon: <DashboardIcon />,
+  },
+  {
+    segment: 'stats',
+    title: 'Statistics',
     icon: <DashboardIcon />,
   },
   {
