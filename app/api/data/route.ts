@@ -7,7 +7,7 @@ export async function GET() {
     const collection = db.collection('history');
     const data = await collection.find({}).toArray();
 
-    return NextResponse.json({ data, status: 200 });
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({
       status: 500,
