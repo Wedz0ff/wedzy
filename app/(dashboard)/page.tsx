@@ -1,10 +1,10 @@
 import * as React from 'react';
-import DashboardContent from './DashboardContent';
+import Home from '../components/HomePage';
 
 export const metadata = {
   title: 'Statistics',
 };
 
-export default function Dashboard() {
-  return <DashboardContent />;
+export default function Homepage() {
+  return <Home />;
 }

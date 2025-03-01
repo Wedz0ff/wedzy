@@ -35,11 +35,14 @@ export async function GET() {
         { month: {}, year: {} },
       );
 
-      const monthlySpentArray = Object.values(groupedByMonth.month).reverse();
+      const monthlySpentArray = Object.values(
+        groupedByMonth.month as { monthYear: string; totalSpent: number }[],
+      ).reverse();
       const yearlySpentArray = Object.values(groupedByMonth.year);
 
       const totalSpentAll = monthlySpentArray.reduce(
-        (sum, month) => sum + month.totalSpent,
+        (sum, month: { monthYear: string; totalSpent: number }) =>
+          sum + month.totalSpent,
         0,
       );
 

@@ -7,19 +7,25 @@ export async function GET() {
     const db = await connectToDatabase();
     const collection = db.collection('history');
     const data = await collection.find({}).toArray();
-    const formatDate = (date: string) => dayjs(date).format('DD/MM/YYYY');
+
+    const dailySpent: Record<string, number> = {};
 
     const filteredData = data.filter(
       (entry) => entry.desc !== 'Permanent Prey Slot',
     );
 
-    const formattedData = filteredData.map((entry) => ({
-      ...entry,
-      id: parseInt(entry.id),
-      date: formatDate(entry.date),
-    }));
+    filteredData.forEach(({ date, balance }) => {
+      if (!date) return;
 
-    return NextResponse.json(formattedData);
+      const parsedDate = dayjs(date);
+      if (!parsedDate.isValid()) return;
+
+      const dateKey = parsedDate.format('YYYY-MM-DD');
+
+      dailySpent[dateKey] = (dailySpent[dateKey] || 0) + Math.abs(balance);
+    });
+
+    return NextResponse.json(dailySpent);
   } catch (error) {
     return NextResponse.json({
       status: 500,
