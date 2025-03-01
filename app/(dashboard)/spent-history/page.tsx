@@ -7,9 +7,5 @@ export const metadata = {
 };
 
 export default async function SpentHistoryPage() {
-  const rows = await fetch(getApiUrl('/api/spent-history'), {
-    next: { revalidate: 600 },
-  }).then((res) => res.json());
-
-  return <SpentHistoryTable rows={rows} />;
+  return <SpentHistoryTable />;
 }

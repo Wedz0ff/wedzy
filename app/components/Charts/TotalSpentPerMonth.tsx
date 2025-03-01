@@ -38,7 +38,9 @@ export default function PageViewsBarChart() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/spent-monthly');
+      const response = await fetch('/api/spent-monthly', {
+        next: { revalidate: 3600 },
+      });
       const data = await response.json();
 
       const transformedData = Object.keys(data)

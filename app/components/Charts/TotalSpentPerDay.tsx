@@ -21,7 +21,9 @@ export default function SessionsChart() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/spent-daily');
+        const response = await fetch('/api/spent-daily', {
+          next: { revalidate: 3600 },
+        });
         const rawData: Record<string, unknown> = await response.json();
 
         const formattedData: [string, number][] = Object.entries(rawData)

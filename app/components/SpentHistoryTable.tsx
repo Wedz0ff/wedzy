@@ -6,9 +6,45 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DescriptionIcon from '@mui/icons-material/Description';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import NumbersIcon from '@mui/icons-material/Numbers';
-import Image from 'next/image';
 
-export default function SpentHistoryTable({ rows }: { rows: any[] }) {
+export default function SpentHistoryTable() {
+  const [data, setData] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/spent-history', {
+          next: { revalidate: 3600 },
+        });
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        const result = await response.json();
+
+        if (isMounted) {
+          setData(result);
+          setLoading(false);
+        }
+      } catch (err: any) {
+        if (isMounted) {
+          setError(err.message);
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
   const columns: GridColDef[] = [
     {
       field: 'id',
@@ -60,10 +96,15 @@ export default function SpentHistoryTable({ rows }: { rows: any[] }) {
   ];
 
   return (
-    <div style={{ width: '700px', overflowX: 'auto' }}>
+    <div
+      style={{
+        width: '700px',
+        overflowX: 'auto',
+      }}
+    >
       <DataGrid
         checkboxSelection
-        rows={rows}
+        rows={data}
         columns={columns}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
