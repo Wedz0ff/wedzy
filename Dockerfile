@@ -8,6 +8,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+ARG MONGODB_URI
+ARG MONGODB_DB_NAME
+
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 RUN \
@@ -28,6 +31,8 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
+ARG MONGODB_URI
+ARG MONGODB_DB_NAME
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
@@ -40,6 +45,8 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
+ARG MONGODB_URI
+ARG MONGODB_DB_NAME
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
@@ -62,5 +69,6 @@ ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
+
 ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
