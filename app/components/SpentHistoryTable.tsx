@@ -20,8 +20,7 @@ export default function SpentHistoryTable() {
         const response = await fetch('/api/spent-history', {
           next: { revalidate: 3600 },
         });
-        if (!response.ok)
-          throw new Error(`HTTP error! Status: ${response.status}`);
+
         const result = await response.json();
 
         if (isMounted) {
